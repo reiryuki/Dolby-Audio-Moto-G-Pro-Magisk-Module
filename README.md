@@ -7,6 +7,7 @@
 ## Descriptions
 - Dolby soundfx equalizer ported from Motorola Moto G Pro (sofiap_sprout) and integrated as a Magisk Module for all supported and rooted devices with Magisk
 - Global type soundfx
+- Doesn't support auxiliary cable
 
 ## Sources
 - https://dumps.tadiphone.dev/dumps/motorola/sofiap_sprout user-12-S0PR32.44-11-8-6de89-release-keys
@@ -28,7 +29,7 @@
 - Recommended to use Magisk Delta https://t.me/androidryukimodsdiscussions/100091
 - Remove any other Dolby module with different name (no need to remove if it's the same name)
 - Reboot
-- Install this module https://www.pling.com/p/1531576/ via Magisk Manager or Recovery
+- Install this module https://www.pling.com/p/1531645/ via Magisk Manager or Recovery
 - Install AML Magisk Module https://zackptg5.com/android.php#aml only if using any other audio mod module
 - Reboot
 

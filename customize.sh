@@ -898,6 +898,7 @@ if echo "$PROP" | grep -Eq m; then
   ui_print "- Activating music stream..."
   sed -i 's/#m//g' $FILE
   sed -i 's/musicstream=/musicstream=true/g' $MODPATH/acdb.conf
+  sed -i 's/musicstream=/musicstream=true/g' $MODPATH/acdb2.conf
   ui_print " "
 else
   APP=AudioFX
@@ -913,6 +914,11 @@ fi
 if echo "$PROP" | grep -Eq a; then
   ui_print "- Activating alarm stream..."
   sed -i 's/#a//g' $FILE
+  ui_print " "
+fi
+if echo "$PROP" | grep -Eq s; then
+  ui_print "- Activating system stream..."
+  sed -i 's/#s//g' $FILE
   ui_print " "
 fi
 if echo "$PROP" | grep -Eq v; then

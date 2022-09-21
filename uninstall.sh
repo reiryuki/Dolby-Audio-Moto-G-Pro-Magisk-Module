@@ -5,7 +5,14 @@ APP="`ls $MODPATH/system/priv-app` `ls $MODPATH/system/app`"
 PKG="com.motorola.dolby.dolbyui
      com.dolby.daxservice
      com.motorola.motosignature.app"
-     
+
+# boot mode
+if [ ! "$BOOTMODE" ]; then
+  [ -z $BOOTMODE ] && ps | grep zygote | grep -qv grep && BOOTMODE=true
+  [ -z $BOOTMODE ] && ps -A | grep zygote | grep -qv grep && BOOTMODE=true
+  [ -z $BOOTMODE ] && BOOTMODE=false
+fi
+
 # cleaning
 for PKGS in $PKG; do
   rm -rf /data/user/*/$PKGS
@@ -22,12 +29,11 @@ rm -rf /cache/magisk/"$MODID"
 rm -f /data/vendor/media/dax_sqlite3.db
 rm -rf /data/vendor/dolby
 resetprop -p --delete persist.vendor.audio_fx.current
-
-# boot mode
-if [ ! "$BOOTMODE" ]; then
-  [ -z $BOOTMODE ] && ps | grep zygote | grep -qv grep && BOOTMODE=true
-  [ -z $BOOTMODE ] && ps -A | grep zygote | grep -qv grep && BOOTMODE=true
-  [ -z $BOOTMODE ] && BOOTMODE=false
+if [ "$BOOTMODE" != true ]; then
+  rm -rf `find /metadata/early-mount.d\
+  /mnt/vendor/persist/early-mount.d /persist/early-mount.d\
+  /data/unencrypted/early-mount.d /cache/early-mount.d\
+  /data/adb/modules/early-mount.d -type f -name manifest.xml`
 fi
 
 # magisk

@@ -156,13 +156,14 @@ fi
 #3  remove_xml
 #3fi
 
+# function
+dap() {
 # store
 LIB=libswdap.so
 LIBNAME=dap
 NAME=dap
 UUID=9d4921da-8225-4f29-aefa-39537a04bcaa
 RMV="$LIB $LIBNAME $NAME $UUID"
-
 # patch audio effects conf
 if [ "$MODAEC" ]; then
   remove_conf
@@ -175,7 +176,6 @@ if [ "$MODAEC" ]; then
 #v  sed -i "/^    voice_call {/a\        $NAME {\n        }" $MODAEC
 #n  sed -i "/^    notification {/a\        $NAME {\n        }" $MODAEC
 fi
-
 # patch effects xml
 if [ "$MODAEX" ]; then
   remove_xml
@@ -188,7 +188,8 @@ if [ "$MODAEX" ]; then
 #v  sed -i "/<stream type=\"voice_call\">/a\            <apply effect=\"$NAME\"\/>" $MODAEX
 #n  sed -i "/<stream type=\"notification\">/a\            <apply effect=\"$NAME\"\/>" $MODAEX
 fi
-
+}
+dvl() {
 # store
 LIB=libdlbvol.so
 LIBNAME=dvl
@@ -204,7 +205,6 @@ NAME5=dvl_notification
 UUID5=1f0091e3-6ad8-40fe-9b09-5948f9a26e7e
 RMV="$LIB $LIBNAME $NAME $UUID $NAME2 $UUID2
      $NAME3 $UUID3 $NAME4 $UUID4 $NAME5 $UUID5"
-
 # patch audio effects conf
 if [ "$MODAEC" ]; then
   remove_conf
@@ -220,7 +220,6 @@ if [ "$MODAEC" ]; then
   sed -i "/^effects {/a\  $NAME5 {\n    library $LIBNAME\n    uuid $UUID5\n  }" $MODAEC
 #n  sed -i "/^    notification {/a\        $NAME5 {\n        }" $MODAEC
 fi
-
 # patch effects xml
 if [ "$MODAEX" ]; then
   remove_xml
@@ -236,6 +235,11 @@ if [ "$MODAEX" ]; then
   sed -i "/<effects>/a\        <effect name=\"$NAME5\" library=\"$LIBNAME\" uuid=\"$UUID5\"\/>" $MODAEX
 #n  sed -i "/<stream type=\"notification\">/a\            <apply effect=\"$NAME5\"\/>" $MODAEX
 fi
+}
+
+# effect
+dap
+#11dvl
 
 # patch audio policy
 #uif [ "$MODAP" ]; then

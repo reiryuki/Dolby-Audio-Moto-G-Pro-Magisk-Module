@@ -3,4 +3,3 @@
     <library name="moto-settings"
         file="/system/framework/moto-settings.jar"/>
 </permissions>
-

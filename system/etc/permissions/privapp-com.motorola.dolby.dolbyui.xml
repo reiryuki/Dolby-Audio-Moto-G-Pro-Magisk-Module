@@ -4,4 +4,3 @@
         <permission name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS"/>
     </privapp-permissions>
 </permissions>
-

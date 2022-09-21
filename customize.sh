@@ -120,7 +120,7 @@ done
 # conflict
 NAME="dolbyatmos
       DolbyAtmos
-      DolbyAudio
+      MotoDolby
       dsplus
       Dolby"
 conflict
@@ -175,8 +175,10 @@ ui_print "  Please wait..."
 if ! grep -Eq $NAME `find $DIR/lib*/hw -type f -name *audio*.so`\
 || [ "`grep_prop dolby.10 $OPTIONALS`" == 1 ]; then
   ui_print "  Using legacy libraries"
-  rm -f $MODPATH/system/vendor/lib64/libstagefright*.so
+  rm -f $MODPATH/system/vendor/lib64/libstagefrightdolby.so
   cp -rf $MODPATH/system_10/* $MODPATH/system
+  sed -i 's/#11//g' $MODPATH/.aml.sh
+  rm -f `find $MODPATH/system/vendor -type f -name libdlbvol.so -o -name libdlbpreg.so`
 fi
 rm -rf $MODPATH/system_10
 ui_print " "
@@ -217,62 +219,6 @@ fi\' $MODPATH/post-fs-data.sh
 set_read_write() {
 for NAMES in $NAME; do
   blockdev --setrw $DIR$NAMES
-done
-}
-find_file() {
-for NAMES in $NAME; do
-  if [ "$SYSTEM_ROOT" == true ]; then
-    if [ "$BOOTMODE" == true ]; then
-      FILE=`find $MAGISKTMP/mirror/system_root\
-                 $MAGISKTMP/mirror/system_ext\
-                 $MAGISKTMP/mirror/vendor -type f -name $NAMES`
-    else
-      FILE=`find /system_root\
-                 /system_ext\
-                 /vendor -type f -name $NAMES`
-    fi
-  else
-    if [ "$BOOTMODE" == true ]; then
-      FILE=`find $MAGISKTMP/mirror/system\
-                 $MAGISKTMP/mirror/system_ext\
-                 $MAGISKTMP/mirror/vendor -type f -name $NAMES`
-    else
-      FILE=`find /system\
-                 /system_ext\
-                 /vendor -type f -name $NAMES`
-    fi
-  fi
-  if [ ! "$FILE" ]; then
-    if [ "`grep_prop install.hwlib $OPTIONALS`" == 1 ]; then
-      sed -i 's/^install.hwlib=1/install.hwlib=0/' $OPTIONALS
-      ui_print "- Installing $NAMES directly to /system and /vendor..."
-      if [ "$BOOTMODE" == true ]; then
-        cp $MODPATH/system_support/lib/$NAMES $MAGISKTMP/mirror/system/lib
-        cp $MODPATH/system_support/lib64/$NAMES $MAGISKTMP/mirror/system/lib64
-        cp $MODPATH/system_support/vendor/lib/$NAMES $MAGISKTMP/mirror/vendor/lib
-        cp $MODPATH/system_support/vendor/lib64/$NAMES $MAGISKTMP/mirror/vendor/lib64
-        chcon u:object_r:system_lib_file:s0 $MAGISKTMP/mirror/system/lib*/$NAMES
-        chcon u:object_r:same_process_hal_file:s0 $MAGISKTMP/mirror/vendor/lib*/$NAMES
-      else
-        cp $MODPATH/system_support/lib/$NAMES /system/lib
-        cp $MODPATH/system_support/lib64/$NAMES /system/lib64
-        cp $MODPATH/system_support/vendor/lib/$NAMES /vendor/lib
-        cp $MODPATH/system_support/vendor/lib64/$NAMES /vendor/lib64
-        chcon u:object_r:system_lib_file:s0 /system/lib*/$NAMES
-        chcon u:object_r:same_process_hal_file:s0 /vendor/lib*/$NAMES
-      fi
-      ui_print " "
-    else
-      ui_print "! $NAMES not found."
-      ui_print "  This module will not be working without $NAMES."
-      ui_print "  You can type:"
-      ui_print "  install.hwlib=1"
-      ui_print "  inside $OPTIONALS"
-      ui_print "  and reinstalling this module"
-      ui_print "  to install $NAMES directly to this ROM."
-      ui_print " "
-    fi
-  fi
 done
 }
 backup() {
@@ -428,41 +374,21 @@ for NAMES in $NAME; do
       && [ ! -f $DES ]; then
         ui_print "  ! $DES"
         ui_print "    installation failed."
-        if echo $MAGISK_VER | grep -Eq delta; then
-          ui_print "    Installing $NAMES systemlessly using early init mount..."
-          mkdir -p $EIMDIR/system/lib
-          cp $MODPATH/system_support/lib/$NAMES $EIMDIR/system/lib
-        fi
       fi
       if [ -f $MODPATH/system_support/lib64/$NAMES ]\
       && [ ! -f $DES2 ]; then
         ui_print "  ! $DES2"
         ui_print "    installation failed."
-        if echo $MAGISK_VER | grep -Eq delta; then
-          ui_print "    Installing $NAMES systemlessly using early init mount..."
-          mkdir -p $EIMDIR/system/lib64
-          cp $MODPATH/system_support/lib64/$NAMES $EIMDIR/system/lib64
-        fi
       fi
       if [ -f $MODPATH/system_support/vendor/lib/$NAMES ]\
       && [ ! -f $DES3 ]; then
         ui_print "  ! $DES3"
         ui_print "    installation failed."
-        if echo $MAGISK_VER | grep -Eq delta; then
-          ui_print "    Installing $NAMES systemlessly using early init mount..."
-          mkdir -p $EIMDIR/system/vendor/lib
-          cp $MODPATH/system_support/vendor/lib/$NAMES $EIMDIR/system/vendor/lib
-        fi
       fi
       if [ -f $MODPATH/system_support/vendor/lib64/$NAMES ]\
       && [ ! -f $DES4 ]; then
         ui_print "  ! $DES4"
         ui_print "    installation failed."
-        if echo $MAGISK_VER | grep -Eq delta; then
-          ui_print "    Installing $NAMES systemlessly using early init mount..."
-          mkdir -p $EIMDIR/system/vendor/lib64
-          cp $MODPATH/system_support/vendor/lib64/$NAMES $EIMDIR/system/vendor/lib64
-        fi
       fi
       ui_print " "
     else
@@ -572,7 +498,7 @@ early_init_mount_dir
 
 # find
 chcon -R u:object_r:system_lib_file:s0 $MODPATH/system_support/lib*
-chcon -R u:object_r:same_process_hal_file:s0 $MODPATH/system/vendor/lib*
+chcon -R u:object_r:same_process_hal_file:s0 $MODPATH/system_support/vendor/lib*
 NAME=`ls $MODPATH/system_support/vendor/lib`
 find_file
 rm -rf $MODPATH/system_support
@@ -1015,14 +941,13 @@ if [ "`grep_prop dolby.deepbass $OPTIONALS`" != 0 ]; then
   sed -i 's/frequency="11250"/frequency="9000"/g' $FILE
   sed -i 's/frequency="13875"/frequency="11250"/g' $FILE
   sed -i 's/frequency="19688"/frequency="13875"/g' $FILE
-  ui_print " "
 fi
 # Already enabled
 #ui_print "- Increase maximum & minimum gain of Custom Manual GEQ"
 #sed -i 's/max_edit_gain="0"/max_edit_gain="576"/g' $FILE
 #sed -i 's/min_edit_gain="-96"/min_edit_gain="-576"/g' $FILE
 #sed -i 's/gain="-48"/gain="0"/g' $FILE
-#ui_print " "
+ui_print " "
 
 # audio rotation
 FILE=$MODPATH/service.sh

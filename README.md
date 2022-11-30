@@ -30,7 +30,7 @@
 - Remove any other Dolby module with different name (no need to remove if it's the same name)
 - Reboot
 - Install this module https://www.pling.com/p/1531645/ via Magisk Manager or Recovery
-- Install AML Magisk Module https://zackptg5.com/android.php#aml only if using any other audio mod module
+- Install AML Magisk Module https://t.me/androidryukimodsdiscussions/29836 only if using any other audio mod module
 - Reboot
 
 ## Optionals

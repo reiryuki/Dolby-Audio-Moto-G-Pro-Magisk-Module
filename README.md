@@ -19,6 +19,7 @@
 
 ## Requirements
 - Android 9 and up
+- Architecture 64 bit
 - Magisk installed
 - Recommended to use Magisk Delta for systemless early init mount manifest.xml if your ROM is Read-Only https://t.me/androidryukimodsdiscussions/100091
 

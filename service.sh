@@ -136,6 +136,9 @@ killall $PKG
 
 # grant
 PKG=com.motorola.dolby.dolbyui
+if [ "$API" -ge 33 ]; then
+  pm grant $PKG android.permission.POST_NOTIFICATIONS
+fi
 if [ "$API" -ge 31 ]; then
   pm grant $PKG android.permission.BLUETOOTH_CONNECT
 fi

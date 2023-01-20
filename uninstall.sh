@@ -5,10 +5,6 @@ fi
 if [ ! "$MODID" ]; then
   MODID=`echo "$MODPATH" | sed 's|/data/adb/modules/||' | sed 's|/data/adb/modules_update/||'`
 fi
-APP="`ls $MODPATH/system/priv-app` `ls $MODPATH/system/app`"
-PKG="com.motorola.dolby.dolbyui
-     com.dolby.daxservice
-     com.motorola.motosignature.app"
 
 # boot mode
 if [ ! "$BOOTMODE" ]; then
@@ -18,12 +14,14 @@ if [ ! "$BOOTMODE" ]; then
 fi
 
 # cleaning
-for PKGS in $PKG; do
-  rm -rf /data/user/*/$PKGS
-done
+APP="`ls $MODPATH/system/priv-app` `ls $MODPATH/system/app`"
 for APPS in $APP; do
   rm -f `find /data/system/package_cache -type f -name *$APPS*`
   rm -f `find /data/dalvik-cache /data/resource-cache -type f -name *$APPS*.apk`
+done
+PKG=`cat $MODPATH/package.txt`
+for PKGS in $PKG; do
+  rm -rf /data/user/*/$PKGS
 done
 rm -rf /metadata/magisk/"$MODID"
 rm -rf /mnt/vendor/persist/magisk/"$MODID"
@@ -37,7 +35,7 @@ if [ "$BOOTMODE" != true ]; then
   rm -rf `find /metadata/early-mount.d\
   /mnt/vendor/persist/early-mount.d /persist/early-mount.d\
   /data/unencrypted/early-mount.d /cache/early-mount.d\
-  /data/adb/modules/early-mount.d -type f -name manifest.xml\
+  /data/adb/early-mount.d -type f -name manifest.xml\
   -o -name libhidlbase.so`
 fi
 

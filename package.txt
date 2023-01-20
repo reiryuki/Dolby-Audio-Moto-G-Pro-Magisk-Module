@@ -1,0 +1,4 @@
+com.motorola.dolby.dolbyui
+com.dolby.daxservice
+com.motorola.android.providers.settings
+com.motorola.motosignature.app

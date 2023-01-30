@@ -27,7 +27,8 @@ fi
 # function
 stop_service() {
 for NAMES in $NAME; do
-  if getprop | grep "init.svc.$NAMES\]: \[running"; then
+  if [ "`getprop init.svc.$NAMES`" == running ]\
+  || [ "`getprop init.svc.$NAMES`" == restarting ]; then
     stop $NAMES
   fi
 done
@@ -66,6 +67,7 @@ killall android.hardware.sensors@1.0-service
 killall android.hardware.sensors@2.0-service-mediatek
 killall android.hardware.light-service.mt6768
 killall android.hardware.lights-service.xiaomi_mithorium
+killall vendor.samsung.hardware.light-service
 CAMERA=`realpath /*/bin/hw/android.hardware.camera.provider@*-service_64`
 [ "$CAMERA" ] && killall $CAMERA
 
@@ -163,13 +165,16 @@ if [ "$LOG" != stopped ] && [ "$SIZE" -gt 50 ]; then
 fi
 }
 check_audioserver() {
-stop_log
-PID=`pidof $SVC`
+if [ "$NEXTPID" ]; then
+  PID=$NEXTPID
+else
+  PID=`pidof $SVC`
+fi
 sleep 10
+stop_log
 NEXTPID=`pidof $SVC`
 if [ "`getprop init.svc.$SVC`" != stopped ]; then
-  until [ "$PID" ] && [ "$NEXTPID" ]\
-  && [ "$PID" != "$NEXTPID" ]; do
+  until [ "$PID" != "$NEXTPID" ]; do
     check_audioserver
   done
   killall $PROC

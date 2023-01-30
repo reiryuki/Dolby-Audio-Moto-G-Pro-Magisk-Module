@@ -961,7 +961,7 @@
         <item>-144</item>
       </gains>
     </geq-preset>
-    <geq-preset name="manual" id="3" max_edit_gain="576" min_edit_gain="-576">
+    <geq-preset name="manual" id="3" max_edit_gain="576" min_edit_gain="-192">
       <gains>
         <item>0</item>
         <item>0</item>

@@ -130,6 +130,18 @@ if [ "`grep_prop sepolicy.sh $OPTIONALS`" == 1 ]\
   mv -f $FILE $DES
 fi
 
+# motocore
+if [ ! -d /data/adb/modules_update/MotoCore ]\
+&& [ ! -d /data/adb/modules/MotoCore ]; then
+  ui_print "- This module requires Moto Core Magisk Module installed"
+  ui_print "  except you are in Motorola ROM."
+  ui_print "  Please read the installation guide!"
+  ui_print " "
+else
+  rm -f /data/adb/modules/MotoCore/remove
+  rm -f /data/adb/modules/MotoCore/disable
+fi
+
 # .aml.sh
 mv -f $MODPATH/aml.sh $MODPATH/.aml.sh
 

@@ -53,7 +53,6 @@ if [ -d $AML ] && [ ! -f $AML/disable ]\
 && [ -d $ACDB ] && [ ! -f $ACDB/disable ]; then
   touch $ACDB/disable
 fi
-rm -f /data/adb/modules/*/system/app/MotoSignatureApp/.replace
 
 # directory
 SKU=`ls $VETC/audio | grep sku_`

@@ -1,8 +1,8 @@
 # Dolby Audio Moto G Pro Magisk Module
 
 ## DISCLAIMER
-- Dolby apps and blobs are owned by Dolby™.
-- The MIT license specified here is for the Magisk Module, not for Dolby apps and blobs.
+- Motorola & Dolby apps and blobs are owned by Motorola™ & Dolby™.
+- The MIT license specified here is for the Magisk Module, not for Motorola & Dolby apps and blobs.
 
 ## Descriptions
 - Dolby soundfx equalizer ported from Motorola Moto G Pro (sofiap_sprout) and integrated as a Magisk Module for all supported and rooted devices with Magisk

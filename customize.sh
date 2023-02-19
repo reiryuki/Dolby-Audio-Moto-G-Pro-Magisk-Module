@@ -115,11 +115,11 @@ rm -rf $MODPATH/system_10
 ui_print " "
 NAME=_ZN7android8hardware23getOrCreateCachedBinderEPNS_4hidl4base4V1_05IBaseE
 TARGET=vendor.dolby.hardware.dms@1.0.so
-LIST=`strings $MODPATH/system/vendor/lib64/$TARGET | grep lib | grep .so`
-FILE=`for LISTS in $LIST; do echo $SYSTEM/lib64/$LISTS; done`
+LISTS=`strings $MODPATH/system/vendor/lib64/$TARGET | grep ^lib | grep .so`
+FILE=`for LIST in $LISTS; do echo $SYSTEM/lib64/$LIST; done`
 check_function
-LIST=`strings $MODPATH/system/vendor/lib/$TARGET | grep lib | grep .so`
-FILE=`for LISTS in $LIST; do echo $SYSTEM/lib/$LISTS; done`
+LISTS=`strings $MODPATH/system/vendor/lib/$TARGET | grep ^lib | grep .so`
+FILE=`for LIST in $LISTS; do echo $SYSTEM/lib/$LIST; done`
 check_function
 
 # sepolicy
@@ -916,7 +916,7 @@ NAME=DolbyUninstaller.zip
 cp -f $MODPATH/$NAME /sdcard
 rm -f $MODPATH/$NAME
 ui_print "- Flash /sdcard/$NAME"
-ui_print "  via recovery if you got bootloop"
+ui_print "  via recovery only if you got bootloop"
 ui_print " "
 
 

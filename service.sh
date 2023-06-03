@@ -11,7 +11,6 @@ resetprop -n persist.vendor.audio_fx.current dolby
 resetprop ro.vendor.dolby.dax.version DS1_2.3.0.0_r1
 resetprop vendor.audio.dolby.ds2.enabled true
 resetprop vendor.audio.dolby.ds2.hardbypass true
-#36resetprop ro.dolby.db 36
 
 # restart
 if [ "$API" -ge 24 ]; then

@@ -889,15 +889,15 @@
   </tuning>
   <authorized_technologies sku_name="DAX1 Android" device="dax1_android" bundle="DAPv2 2.7.x"/>
   <graphic-equalizer>
-    <geq-preset name="brilliant treble" id="0" max_edit_gain="576" min_edit_gain="-192">
+    <geq-preset name="brilliant treble" id="0" max_edit_gain="192" min_edit_gain="-192">
     </geq-preset>
-    <geq-preset name="bass boost" id="1" max_edit_gain="576" min_edit_gain="-192">
+    <geq-preset name="bass boost" id="1" max_edit_gain="192" min_edit_gain="-192">
     </geq-preset>
-    <geq-preset name="vocal boost" id="2" max_edit_gain="576" min_edit_gain="-192">
+    <geq-preset name="vocal boost" id="2" max_edit_gain="192" min_edit_gain="-192">
     </geq-preset>
-    <geq-preset name="manual" id="3" max_edit_gain="576" min_edit_gain="-192">
+    <geq-preset name="manual" id="3" max_edit_gain="192" min_edit_gain="-192">
     </geq-preset>
-    <geq-preset name="flat" id="4" max_edit_gain="576" min_edit_gain="-192">
+    <geq-preset name="flat" id="4" max_edit_gain="192" min_edit_gain="-192">
     </geq-preset>
   </graphic-equalizer>
 </device_data>

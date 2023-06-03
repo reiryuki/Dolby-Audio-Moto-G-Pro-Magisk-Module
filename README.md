@@ -20,8 +20,8 @@
 ## Requirements
 - Android 9 and up
 - Architecture 64 bit
-- Magisk installed (Recommended to use Magisk Delta for systemless early init mount manifest.xml if your ROM is Read-Only https://t.me/androidryukimodsdiscussions/100091)
-- Moto Core Magisk Module installed https://github.com/reiryuki/Moto-Core-Magisk-Module
+- Magisk or KernelSU installed (Recommended to use Magisk Delta for systemless early init mount manifest.xml if your ROM is Read-Only https://t.me/androidryukimodsdiscussions/100091)
+- Moto Core Magisk Module installed https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
 
 ## WARNING!!!
 - Possibility of bootloop or even softbrick or a service failure on Read-Only ROM if you don't use Magisk Delta.
@@ -30,10 +30,11 @@
 - Recommended to use Magisk Delta https://t.me/androidryukimodsdiscussions/100091
 - Remove any other Dolby module with different name (no need to remove if it's the same name)
 - Reboot
-- Install Moto Core Magisk Module first: https://github.com/reiryuki/Moto-Core-Magisk-Module
-- Install this module https://www.pling.com/p/1531645/ via Magisk app or Recovery
+- Install Moto Core Magisk Module first: https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
+- Install this module https://www.pling.com/p/1531645/ via Magisk app or KernelSU app or Recovery (unless you are using KernelSU)
 - Install AML Magisk Module https://t.me/androidryukimodsdiscussions/29836 only if using any other audio mod module
 - Reboot
+- If you are using KernelSU, you need to allow superuser list manually all package name listed in package.txt and reboot after
 
 ## Optionals
 - https://t.me/androidryukimodsdiscussions/60861

@@ -219,56 +219,77 @@ if [ "$BOOTMODE" != true ]; then
   mount -o rw -t auto /dev/block/bootdevice/by-name/metadata /metadata
 fi
 
-# function
-check_function() {
+# check
+NAME=_ZN7android23sp_report_stack_pointerEv
+FILE=$VENDOR/lib64/hw/*audio*.so
+FILE2=$VENDOR/lib/hw/*audio*.so
+if [ "`grep_prop dolby.10 $OPTIONALS`" == 1 ]; then
+  SYSTEM_10=true
+else
+  ui_print "- Checking"
+  ui_print "$NAME"
+  ui_print "  function at"
+  ui_print "$FILE"
+  if [ "$IS64BIT" == true ]; then
+    ui_print "$FILE2"
+  fi
+  ui_print "  Please wait..."
+  if [ "$IS64BIT" == true ]; then
+    if ! grep -q $NAME $FILE\
+    || ! grep -q $NAME $FILE2; then
+      SYSTEM_10=true
+    else
+      SYSTEM_10=false
+    fi
+  else
+    if ! grep -q $NAME $FILE; then
+      SYSTEM_10=true
+    else
+      SYSTEM_10=false
+    fi
+  fi
+fi
+if [ "$SYSTEM_10" == true ]; then
+  ui_print "  Using legacy libraries"
+  rm -f $MODPATH/system/vendor/lib64/libstagefrightdolby.so
+  cp -rf $MODPATH/system_10/* $MODPATH/system
+  rm -f `find $MODPATH/system/vendor -type f -name libdlbvol.so -o -name libdlbpreg.so`
+else
+  sed -i 's/#11//g' $MODPATH/.aml.sh
+fi
+rm -rf $MODPATH/system_10
+ui_print " "
+
+# check
+NAME=_ZN7android8hardware23getOrCreateCachedBinderEPNS_4hidl4base4V1_05IBaseE
+DES=vendor.dolby.hardware.dms@1.0.so
+LIB=libhidlbase.so
+if [ "$IS64BIT" == true ]; then
+  LISTS=`strings $MODPATH/system/vendor/lib64/$DES | grep ^lib | grep .so`
+  FILE=`for LIST in $LISTS; do echo $SYSTEM/lib64/$LIST; done`
+  ui_print "- Checking"
+  ui_print "$NAME"
+  ui_print "  function at"
+  ui_print "$FILE"
+  ui_print "  Please wait..."
+  if ! grep -q $NAME $FILE; then
+    ui_print "  Using new $LIB 64"
+    mv -f $MODPATH/system_support/lib64/$LIB $MODPATH/system/lib64
+  fi
+  ui_print " "
+fi
+LISTS=`strings $MODPATH/system/vendor/lib/$DES | grep ^lib | grep .so`
+FILE=`for LIST in $LISTS; do echo $SYSTEM/lib/$LIST; done`
 ui_print "- Checking"
 ui_print "$NAME"
 ui_print "  function at"
 ui_print "$FILE"
 ui_print "  Please wait..."
 if ! grep -q $NAME $FILE; then
-  ui_print "  ! Function not found."
-  ui_print "    Unsupported ROM."
-  if [ "$BOOTMODE" == true ] && [ ! "$MAGISKPATH" ]; then
-    unmount_mirror
-  fi
-  abort
+  ui_print "  Using new $LIB"
+  mv -f $MODPATH/system_support/lib/$LIB $MODPATH/system/lib
 fi
 ui_print " "
-}
-
-# check
-NAME=_ZN7android23sp_report_stack_pointerEv
-FILE=$VENDOR/lib64/hw/*audio*.so
-FILE2=$VENDOR/lib/hw/*audio*.so
-ui_print "- Checking"
-ui_print "$NAME"
-ui_print "  function at"
-ui_print "$FILE"
-ui_print "$FILE2"
-ui_print "  Please wait..."
-if ! grep -q $NAME $FILE\
-|| ! grep -q $NAME $FILE2\
-|| [ "`grep_prop dolby.10 $OPTIONALS`" == 1 ]; then
-  ui_print "  Using legacy libraries"
-  rm -f $MODPATH/system/vendor/lib64/libstagefrightdolby.so
-  cp -rf $MODPATH/system_10/* $MODPATH/system
-  sed -i 's/#11//g' $MODPATH/.aml.sh
-  rm -f `find $MODPATH/system/vendor -type f -name libdlbvol.so -o -name libdlbpreg.so`
-  SYSTEM_10=true
-else
-  SYSTEM_10=false
-fi
-rm -rf $MODPATH/system_10
-ui_print " "
-NAME=_ZN7android8hardware23getOrCreateCachedBinderEPNS_4hidl4base4V1_05IBaseE
-TARGET=vendor.dolby.hardware.dms@1.0.so
-LISTS=`strings $MODPATH/system/vendor/lib64/$TARGET | grep ^lib | grep .so`
-FILE=`for LIST in $LISTS; do echo $SYSTEM/lib64/$LIST; done`
-check_function
-LISTS=`strings $MODPATH/system/vendor/lib/$TARGET | grep ^lib | grep .so`
-FILE=`for LIST in $LISTS; do echo $SYSTEM/lib/$LIST; done`
-check_function
 
 # sepolicy
 FILE=$MODPATH/sepolicy.rule

@@ -48,18 +48,19 @@ for SERVICE in $SERVICES; do
 done
 
 # restart
-killall vendor.qti.hardware.vibrator.service
-killall vendor.qti.hardware.vibrator.service.oneplus9
-killall android.hardware.camera.provider@2.4-service_64
-killall vendor.mediatek.hardware.mtkpower@1.0-service
-killall android.hardware.usb@1.0-service
-killall android.hardware.usb@1.0-service.basic
-killall android.hardware.light-service.mt6768
-killall android.hardware.lights-service.xiaomi_mithorium
-killall vendor.samsung.hardware.light-service
-killall android.hardware.sensors@1.0-service
-killall android.hardware.sensors@2.0-service-mediatek
-killall android.hardware.sensors@2.0-service.multihal
+killall vendor.qti.hardware.vibrator.service\
+ vendor.qti.hardware.vibrator.service.oneplus9\
+ android.hardware.camera.provider@2.4-service_64\
+ vendor.mediatek.hardware.mtkpower@1.0-service\
+ android.hardware.usb@1.0-service\
+ android.hardware.usb@1.0-service.basic\
+ android.hardware.light-service.mt6768\
+ android.hardware.lights-service.xiaomi_mithorium\
+ vendor.samsung.hardware.light-service\
+ android.hardware.sensors@1.0-service\
+ android.hardware.sensors@2.0-service\
+ android.hardware.sensors@2.0-service-mediatek\
+ android.hardware.sensors@2.0-service.multihal
 
 # wait
 sleep 20

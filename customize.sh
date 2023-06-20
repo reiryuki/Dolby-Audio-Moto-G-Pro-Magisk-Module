@@ -76,6 +76,9 @@ if [ ! -f $OPTIONALS ]; then
   touch $OPTIONALS
 fi
 
+# .aml.sh
+mv -f $MODPATH/aml.sh $MODPATH/.aml.sh
+
 # check
 NAME=_ZN7android23sp_report_stack_pointerEv
 FILE=$VENDOR/lib64/hw/*audio*.so
@@ -167,9 +170,6 @@ else
   rm -f /data/adb/modules/MotoCore/remove
   rm -f /data/adb/modules/MotoCore/disable
 fi
-
-# .aml.sh
-mv -f $MODPATH/aml.sh $MODPATH/.aml.sh
 
 # mod ui
 if [ "`grep_prop mod.ui $OPTIONALS`" == 1 ]; then

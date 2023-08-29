@@ -2,7 +2,7 @@
 
 ## DISCLAIMER
 - Motorola & Dolby apps and blobs are owned by Motorola™ & Dolby™.
-- The MIT license specified here is for the Magisk Module, not for Motorola & Dolby apps and blobs.
+- The MIT license specified here is for the Magisk Module only, not for Motorola & Dolby apps and blobs.
 
 ## Descriptions
 - Dolby soundfx equalizer ported from Motorola Moto G Pro (sofiap_sprout) and integrated as a Magisk Module for all supported and rooted devices with Magisk
@@ -28,13 +28,16 @@
 
 ## Installation Guide & Download Link
 - Recommended to use Magisk Delta https://t.me/androidryukimodsdiscussions/100091
-- Remove any other Dolby module with different name (no need to remove if it's the same name)
+- Remove any other else Dolby Magisk module with different name (no need to remove if it's the same name)
 - Reboot
 - Install Moto Core Magisk Module first: https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
+- If you have Dolby in-built in your ROM, then you need to activate data.cleanup=1 at the first time install (READ Optionals bellow!)
 - Install this module https://www.pling.com/p/1531645/ via Magisk app or KernelSU app or Recovery if Magisk installed
 - Install AML Magisk Module https://t.me/androidryukimodsdiscussions/29836 only if using any other audio mod module
 - Reboot
 - If you are using KernelSU, you need to allow superuser list manually all package name listed in package.txt (and your home launcher app also) (enable show system apps) and reboot after
+- If you are using SUList, you need to allow list manually your home launcher app (enable show system apps) and reboot after
+- If options doesn't show up in Bluetooth audio, try disconnect and reconnect the Bluetooth and restart the app
 
 ## Optionals
 - https://t.me/androidryukimodsdiscussions/60861
@@ -54,8 +57,7 @@
 - Android 11 DotOS ROM
 - Android 12 AncientOS ROM
 - Android 12.1 Nusantara ROM
-- Android 13 AOSP ROM
-- Android 13 CrDroid ROM
+- Android 13 AOSP ROM & CrDroid ROM
 
 ## Credits and contributors
 - https://t.me/viperatmos
@@ -63,7 +65,7 @@
 - You can contribute ideas about this Magisk Module here: https://t.me/androidappsportdevelopment
 
 ## Thanks for Donations
-- This Magisk Module is always will be free but you can however show us that you are care by making a donations:
+This Magisk Module is always will be free but you can however show us that you are care by making a donations:
 - https://ko-fi.com/reiryuki
 - https://www.paypal.me/reiryuki
 - https://t.me/androidryukimodsdiscussions/2619

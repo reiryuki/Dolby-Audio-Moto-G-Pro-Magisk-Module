@@ -96,13 +96,6 @@ chmod 0770 $DIR
 chown 1013.1013 $DIR
 chcon u:object_r:vendor_data_file:s0 $DIR
 
-# cleaning
-FILE=$MODPATH/cleaner.sh
-if [ -f $FILE ]; then
-  . $FILE
-  rm -f $FILE
-fi
-
 # permission
 DIRS=`find $MODPATH/vendor\
            $MODPATH/system/vendor -type d`
@@ -198,7 +191,12 @@ if ! grep -A2 vendor.dolby.hardware.dms $FILE | grep 1.0; then
   fi
 fi
 
-
+# cleaning
+FILE=$MODPATH/cleaner.sh
+if [ -f $FILE ]; then
+  . $FILE
+  mv -f $FILE $FILE\.txt
+fi
 
 
 

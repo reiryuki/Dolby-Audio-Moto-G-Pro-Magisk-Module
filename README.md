@@ -7,11 +7,12 @@
 ## Descriptions
 - Dolby soundfx equalizer ported from Motorola Moto G Pro (sofiap_sprout) and integrated as a Magisk Module for all supported and rooted devices with Magisk
 - Global type soundfx
+- Changes/spoofs ro.product.brand to motorola which may break some system apps and features functionality
 - Doesn't support auxiliary cable
 
 ## Sources
 - https://dumps.tadiphone.dev/dumps/motorola/sofiap_sprout user-12-S0PR32.44-11-8-6de89-release-keys
-- libswdap.so: https://dumps.tadiphone.dev/dumps/motorola/sofiap_sprout sofiap_ao_eea-user-11-RPRS31.Q4U-20-36-f72e82-release-keys
+- system_legacy: https://dumps.tadiphone.dev/dumps/motorola/sofiap_sprout sofiap_ao_eea-user-11-RPRS31.Q4U-20-36-f72e82-release-keys
 - system_10: https://dumps.tadiphone.dev/dumps/motorola/sofiap_sprout sofiap_ao_eea-user-10-QPRS30.80-109-2-6-6e7cd-release-keys
 
 ## Screenshots
@@ -22,7 +23,6 @@
 - Architecture 64 bit
 - Magisk or KernelSU installed (Recommended to use Magisk Delta for systemless early init mount manifest.xml if your ROM is Read-Only https://t.me/androidryukimodsdiscussions/100091)
 - Moto Core Magisk Module installed https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
-- ROM doesn't use vendor.dolby.media.c2@1.0-service
 
 ## WARNING!!!
 - Possibility of bootloop or even softbrick or a service failure on Read-Only ROM if you don't use Magisk Delta.

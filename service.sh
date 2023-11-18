@@ -10,6 +10,7 @@ API=`getprop ro.build.version.sdk`
 
 # property
 resetprop ro.audio.ignore_effects false
+resetprop ro.product.brand motorola
 resetprop -p --delete persist.vendor.audio_fx.current
 resetprop -n persist.vendor.audio_fx.current dolby
 resetprop ro.vendor.dolby.dax.version DS1_2.3.0.0_r1

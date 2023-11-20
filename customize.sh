@@ -907,6 +907,45 @@ if [ "$PROP" ] && [ "$PROP" -gt 192 ]; then
 fi
 ui_print " "
 
+# function
+rename_file() {
+ui_print "- Renaming"
+ui_print "$FILE"
+ui_print "  to"
+ui_print "$MODFILE"
+mv -f $FILE $MODFILE
+ui_print " "
+}
+change_name() {
+if grep -q $NAME $FILE; then
+  ui_print "- Changing $NAME to $NAME2 at"
+  ui_print "$FILE"
+  ui_print "  Please wait..."
+  sed -i "s|$NAME|$NAME2|g" $FILE
+  ui_print " "
+fi
+}
+
+# mod
+if [ "`grep_prop dolby.mod $OPTIONALS`" != 0 ]; then
+  NAME=libswdap.so
+  NAME2=libswdlb.so
+  if [ "$IS64BIT" == true ]; then
+    FILE=$MODPATH/system/vendor/lib64/soundfx/$NAME
+    MODFILE=$MODPATH/system/vendor/lib64/soundfx/$NAME2
+    rename_file
+  fi
+  if [ "$LIST32BIT" ]; then
+    FILE=$MODPATH/system/vendor/lib/soundfx/$NAME
+    MODFILE=$MODPATH/system/vendor/lib/soundfx/$NAME2
+    rename_file
+  fi
+  FILE="$MODPATH/system/vendor/lib*/soundfx/$NAME2
+$MODPATH/.aml.sh
+$MODPATH/acdb.conf"
+  change_name
+fi
+
 # audio rotation
 FILE=$MODPATH/service.sh
 if [ "`grep_prop audio.rotation $OPTIONALS`" == 1 ]; then

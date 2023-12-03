@@ -55,7 +55,8 @@ for PKG in $PKGS; do
   rm -rf /data/user*/"$UID"/$PKG
 done
 remove_sepolicy_rule
-rm -f /data/vendor/*/dax_sqlite3.db
+rm -f /data/vendor/media/dax_sqlite3.db
+rm -f /data/vendor/dolby/dax_sqlite3.db
 resetprop -p --delete persist.vendor.audio_fx.current
 if [ "$BOOTMODE" != true ]; then
   rm -f `find /metadata/early-mount.d /persist/early-mount.d\

@@ -264,9 +264,11 @@ if [ "$BOOTMODE" == true ]; then
   done
 fi
 if [ "`grep_prop dolby.mod $OPTIONALS`" == 0 ]; then
-  rm -f /data/vendor/*/dax_sqlite3.db
+  rm -f /data/vendor/media/dax_sqlite3.db
+  rm -f /data/vendor/dolby/dax_sqlite3.db
 else
-  rm -f /data/vendor/*/dap_sqlite3.db
+  rm -f /data/vendor/media/dap_sqlite3.db
+  rm -f /data/vendor/dolby/dap_sqlite3.db
   sed -i 's|dax_sqlite3.db|dap_sqlite3.db|g' $MODPATH/uninstall.sh
 fi
 rm -rf $MODPATH/unused

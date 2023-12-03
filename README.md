@@ -9,6 +9,7 @@
 - Global type soundfx
 - Changes/spoofs ro.product.brand to motorola which may break some system apps and features functionality
 - Doesn't support auxiliary cable
+- Conflicted with vendor.dolby.hardware.dms@2.0-service
 
 ## Sources
 - https://dumps.tadiphone.dev/dumps/motorola/sofiap_sprout user-12-S0PR32.44-11-8-6de89-release-keys

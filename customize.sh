@@ -170,14 +170,14 @@ if [ "$SYSTEM_10" == true ]; then
   rm -f $MODPATH/system/vendor/lib64/libstagefrightdolby.so
   cp -rf $MODPATH/system_10/* $MODPATH/system
   rm -f `find $MODPATH/system/vendor -type f -name libdlbvol.so -o -name libdlbpreg.so`
-  sed -i 's|resetprop ro.product.brand|#resetprop ro.product.brand|g' $MODPATH/service.sh
+  sed -i 's|resetprop -n ro.product.brand|#resetprop -n ro.product.brand|g' $MODPATH/service.sh
   ui_print " "
 else
   sed -i 's|#11||g' $MODPATH/.aml.sh
   if [ "`grep_prop dolby.legacy $OPTIONALS`" == 1 ]; then
     ui_print "- Using legacy libswdap.so"
     cp -rf $MODPATH/system_legacy/* $MODPATH/system
-    sed -i 's|resetprop ro.product.brand|#resetprop ro.product.brand|g' $MODPATH/service.sh
+    sed -i 's|resetprop -n ro.product.brand|#resetprop -n ro.product.brand|g' $MODPATH/service.sh
     ui_print " "
   fi
 fi
@@ -307,12 +307,12 @@ else
   NAMES="dolbyatmos DolbyAtmos MotoDolby"
 fi
 conflict
-NAMES=SoundEnhancement
+NAMES=MiSound
 FILE=/data/adb/modules/$NAMES/module.prop
-if grep -q 'Dolby Atmos Xperia' $FILE; then
+if grep -q 'and Dolby Atmos' $FILE; then
   conflict
 fi
-NAMES=MiSound
+NAMES=SoundEnhancement
 FILE=/data/adb/modules/$NAMES/module.prop
 if grep -q 'and Dolby Atmos' $FILE; then
   conflict
@@ -379,16 +379,32 @@ fi
 }
 backup() {
 if [ ! -f $FILE.orig ] && [ ! -f $FILE.bak ]; then
-  cp -af $FILE $FILE.orig
-  if [ -f $FILE.orig ]; then
-    ui_print "- Created"
-    ui_print "$FILE.orig"
-  else
-    ui_print "- Failed to create"
-    ui_print "$FILE.orig"
-    ui_print "  Probably Read-Only or no space left"
+  ui_print "- Checking free space..."
+  SIZE=`du $FILE | sed "s|$FILE||g"`
+  SIZE=$(( $SIZE + 1 ))
+  INFO=`df $FILE`
+  FREE=`echo "$INFO" | awk 'NR==3{print $3}'`
+  if [ ! "$FREE" ]; then
+    FREE=`echo "$INFO" | awk 'NR==2{print $4}'`
   fi
+  ui_print "$INFO"
+  ui_print "  Free space = $FREE KiB"
+  ui_print "  Free space required = $SIZE KiB"
   ui_print " "
+  if [ "$FREE" -ge "$SIZE" ]; then
+    cp -af $FILE $FILE.orig
+    if [ -f $FILE.orig ]; then
+      ui_print "- Created"
+      ui_print "$FILE.orig"
+      ui_print "  This file will not be restored automatically even you"
+      ui_print "  have uninstalled this module."
+    else
+      ui_print "- Failed to create"
+      ui_print "$FILE.orig"
+      ui_print "  The partition is Read-Only"
+    fi
+    ui_print " "
+  fi
 fi
 }
 patch_manifest() {
@@ -630,19 +646,16 @@ FILE="$MAGISKTMP/mirror/*/etc/vintf/manifest.xml
       $MAGISKTMP/mirror/*/*/etc/vintf/manifest/*.xml
       /*/etc/vintf/manifest/*.xml /*/*/etc/vintf/manifest/*.xml"
 if [ "`grep_prop dolby.skip.vendor $OPTIONALS`" != 1 ]\
-&& ! df -h $VENDOR | grep 100%\
 && ! grep -A2 vendor.dolby.hardware.dms $FILE | grep -q 1.0; then
   FILE=$VENDOR/etc/vintf/manifest.xml
   patch_manifest
 fi
 if [ "`grep_prop dolby.skip.system $OPTIONALS`" != 1 ]\
-&& ! df -h $SYSTEM | grep 100%\
 && ! grep -A2 vendor.dolby.hardware.dms $FILE | grep -q 1.0; then
   FILE=$SYSTEM/etc/vintf/manifest.xml
   patch_manifest
 fi
 if [ "`grep_prop dolby.skip.system_ext $OPTIONALS`" != 1 ]\
-&& ! df -h $SYSTEM_EXT | grep 100%\
 && ! grep -A2 vendor.dolby.hardware.dms $FILE | grep -q 1.0; then
   FILE=$SYSTEM_EXT/etc/vintf/manifest.xml
   patch_manifest
@@ -650,6 +663,7 @@ fi
 if ! grep -A2 vendor.dolby.hardware.dms $FILE | grep -q 1.0; then
   patch_manifest_eim
   if [ $EIM == false ]; then
+    sed -i 's|#s||g' $MODPATH/service.sh
     ui_print "- Using systemless manifest.xml patch."
     ui_print "  On some ROMs, it causes bugs or even makes bootloop"
     ui_print "  because not allowed to restart hwservicemanager."
@@ -664,19 +678,16 @@ FILE="$MAGISKTMP/mirror/*/etc/selinux/*_hwservice_contexts
       /*/etc/selinux/*_hwservice_contexts
       /*/*/etc/selinux/*_hwservice_contexts"
 if [ "`grep_prop dolby.skip.vendor $OPTIONALS`" != 1 ]\
-&& ! df -h $VENDOR | grep 100%\
 && ! grep -Eq 'u:object_r:hal_dms_hwservice:s0|u:object_r:default_android_hwservice:s0' $FILE; then
   FILE=$VENDOR/etc/selinux/vendor_hwservice_contexts
   patch_hwservice
 fi
 if [ "`grep_prop dolby.skip.system $OPTIONALS`" != 1 ]\
-&& ! df -h $SYSTEM | grep 100%\
 && ! grep -Eq 'u:object_r:hal_dms_hwservice:s0|u:object_r:default_android_hwservice:s0' $FILE; then
   FILE=$SYSTEM/etc/selinux/plat_hwservice_contexts
   patch_hwservice
 fi
 if [ "`grep_prop dolby.skip.system_ext $OPTIONALS`" != 1 ]\
-&& ! df -h $SYSTEM_EXT | grep 100%\
 && ! grep -Eq 'u:object_r:hal_dms_hwservice:s0|u:object_r:default_android_hwservice:s0' $FILE; then
   FILE=$SYSTEM_EXT/etc/selinux/system_ext_hwservice_contexts
   patch_hwservice
@@ -1018,8 +1029,8 @@ FILE=$MODPATH/service.sh
 if [ "`grep_prop audio.rotation $OPTIONALS`" == 1 ]; then
   ui_print "- Enables ro.audio.monitorRotation=true"
   sed -i '1i\
-resetprop ro.audio.monitorRotation true\
-resetprop ro.audio.monitorWindowRotation true' $FILE
+resetprop -n ro.audio.monitorRotation true\
+resetprop -n ro.audio.monitorWindowRotation true' $FILE
   ui_print " "
 fi
 
@@ -1064,14 +1075,6 @@ if [ "`grep_prop fix.vendor_overlay $OPTIONALS`" == 1 ]\
   cp -rf $DIR/*/* $MODPATH/system/vendor
   ui_print " "
 fi
-
-# uninstaller
-NAME=DolbyModuleUninstaller.zip
-cp -f $MODPATH/$NAME /sdcard
-rm -f $MODPATH/$NAME
-ui_print "- Flash /sdcard/$NAME"
-ui_print "  via recovery only if you got bootloop"
-ui_print " "
 
 # run
 . $MODPATH/copy.sh

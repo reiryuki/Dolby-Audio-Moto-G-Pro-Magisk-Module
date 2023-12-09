@@ -9,14 +9,14 @@ set -x
 API=`getprop ro.build.version.sdk`
 
 # property
-resetprop ro.audio.ignore_effects false
-resetprop ro.product.brand motorola
+resetprop -n ro.audio.ignore_effects false
+resetprop -n ro.product.brand motorola
 resetprop -p --delete persist.vendor.audio_fx.current
 resetprop -n persist.vendor.audio_fx.current dolby
-resetprop ro.vendor.dolby.dax.version DS1_2.3.0.0_r1
-resetprop ro.dolby.mod_uuid false
-resetprop vendor.audio.dolby.ds2.enabled true
-resetprop vendor.audio.dolby.ds2.hardbypass true
+resetprop -n ro.vendor.dolby.dax.version DS1_2.3.0.0_r1
+resetprop -n ro.dolby.mod_uuid false
+resetprop -n vendor.audio.dolby.ds2.enabled true
+resetprop -n vendor.audio.dolby.ds2.hardbypass true
 
 # restart
 if [ "$API" -ge 24 ]; then
@@ -77,6 +77,7 @@ killall vendor.qti.hardware.vibrator.service\
  android.hardware.sensors@2.0-service-mediatek\
  android.hardware.sensors@2.0-service.multihal\
  android.hardware.health-service.qti
+#skillall vendor.qti.hardware.display.allocator-service
 
 # wait
 sleep 20

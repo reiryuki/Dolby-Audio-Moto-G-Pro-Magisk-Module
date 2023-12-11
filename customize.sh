@@ -57,7 +57,8 @@ if [ "$IS64BIT" == true ]; then
     ui_print "- 32 bit library support"
   else
     ui_print "- Doesn't support 32 bit library"
-    rm -rf $MODPATH/system*/lib $MODPATH/system*/vendor/lib
+    rm -rf $MODPATH/armeabi-v7a $MODPATH/x86\
+     $MODPATH/system*/lib $MODPATH/system*/vendor/lib
   fi
   ui_print " "
 else
@@ -1059,12 +1060,12 @@ done
 # check
 if [ "$IS64BIT" == true ]; then
   FILES=/lib64/libstagefrightdolby.so
-#  file_check_vendor
+  file_check_vendor
 fi
 if [ "$LIST32BIT" ]; then
   FILES="/lib/libstagefrightdolby.so
          /lib/libstagefright_soft_ddpdec.so"
-#  file_check_vendor
+  file_check_vendor
 fi
 
 # vendor_overlay

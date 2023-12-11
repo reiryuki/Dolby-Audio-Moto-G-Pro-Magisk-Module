@@ -309,14 +309,19 @@ dvl() {
 # store
 LIB=libdlbvol.so
 LIBNAME=dvl
+NAME=dlb_music_listener
 NAME=dvl_music
 UUID=40f66c8b-5aa5-4345-8919-53ec431aaa98
+NAME2=dlb_ring_listener
 NAME2=dvl_ring
 UUID2=21d14087-558a-4f21-94a9-5002dce64bce
+NAME3=dlb_alarm_listener
 NAME3=dvl_alarm
 UUID3=6aff229c-30c6-4cc8-9957-dbfe5c1bd7f6
+NAME4=dlb_system_listener
 NAME4=dvl_system
 UUID4=874db4d8-051d-4b7b-bd95-a3bebc837e9e
+NAME5=dlb_notification_listener
 NAME5=dvl_notification
 UUID5=1f0091e3-6ad8-40fe-9b09-5948f9a26e7e
 RMVS="$LIB $LIBNAME $NAME $UUID $NAME2 $UUID2

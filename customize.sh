@@ -1,16 +1,23 @@
 # space
 ui_print " "
 
+# var
+UID=`id -u`
+LIST32BIT=`grep_get_prop ro.product.cpu.abilist32`
+if [ ! "$LIST32BIT" ]; then
+  LIST32BIT=`grep_get_prop ro.system.product.cpu.abilist32`
+fi
+
 # log
 if [ "$BOOTMODE" != true ]; then
-  FILE=/sdcard/$MODID\_recovery.log
+  FILE=/data/media/"$UID"/$MODID\_recovery.log
   ui_print "- Log will be saved at $FILE"
   exec 2>$FILE
   ui_print " "
 fi
 
 # optionals
-OPTIONALS=/sdcard/optionals.prop
+OPTIONALS=/data/media/"$UID"/optionals.prop
 if [ ! -f $OPTIONALS ]; then
   touch $OPTIONALS
 fi
@@ -20,12 +27,6 @@ if [ "`grep_prop debug.log $OPTIONALS`" == 1 ]; then
   ui_print "- The install log will contain detailed information"
   set -x
   ui_print " "
-fi
-
-# var
-LIST32BIT=`grep_get_prop ro.product.cpu.abilist32`
-if [ ! "$LIST32BIT" ]; then
-  LIST32BIT=`grep_get_prop ro.system.product.cpu.abilist32`
 fi
 
 # run
@@ -168,7 +169,7 @@ else
 fi
 if [ "$SYSTEM_10" == true ]; then
   ui_print "- Using legacy libraries"
-  rm -f $MODPATH/system/vendor/lib64/libstagefrightdolby.so
+  rm -f $MODPATH/system/vendor/lib64/libstagefright*.so
   cp -rf $MODPATH/system_10/* $MODPATH/system
   rm -f `find $MODPATH/system/vendor -type f -name libdlbvol.so -o -name libdlbpreg.so`
   sed -i 's|resetprop -n ro.product.brand|#resetprop -n ro.product.brand|g' $MODPATH/service.sh
@@ -241,7 +242,7 @@ fi
 # mod ui
 if [ "`grep_prop mod.ui $OPTIONALS`" == 1 ]; then
   APP=MotoDolbyV3
-  FILE=/sdcard/$APP.apk
+  FILE=/data/media/"$UID"/$APP.apk
   DIR=`find $MODPATH/system -type d -name $APP`
   ui_print "- Using modified UI apk..."
   if [ -f $FILE ]; then
@@ -524,28 +525,8 @@ run_find_file() {
 for NAME in $NAMES; do
   FILE=`find $SYSTEM$DIR $SYSTEM_EXT$DIR -type f -name $NAME`
   if [ ! "$FILE" ]; then
-    if [ "`grep_prop install.hwlib $OPTIONALS`" == 1 ]; then
-      ui_print "- Installing $DIR/$NAME directly to"
-      ui_print "$SYSTEM..."
-      cp $MODPATH/system_support$DIR/$NAME $SYSTEM$DIR
-      DES=$SYSTEM$DIR/$NAME
-      if [ -f $MODPATH/system_support$DIR/$NAME ]\
-      && [ ! -f $DES ]; then
-        ui_print "  ! Installation failed."
-        ui_print "    Using $DIR/$NAME systemlessly."
-        cp -f $MODPATH/system_support$DIR/$NAME $MODPATH/system$DIR
-      fi
-    else
-      ui_print "! $DIR/$NAME not found."
-      ui_print "  Using $DIR/$NAME systemlessly."
-      cp -f $MODPATH/system_support$DIR/$NAME $MODPATH/system$DIR
-      ui_print "  If this module still doesn't work, type:"
-      ui_print "  install.hwlib=1"
-      ui_print "  inside $OPTIONALS"
-      ui_print "  and reinstall this module"
-      ui_print "  to install $DIR/$NAME directly to this ROM."
-      ui_print "  DwYOR!"
-    fi
+    ui_print "- Using /system$DIR/$NAME"
+    cp -f $MODPATH/system_support$DIR/$NAME $MODPATH/system$DIR
     ui_print " "
   fi
 done
@@ -559,7 +540,6 @@ if [ "$LIST32BIT" ]; then
   DIR=/lib
   run_find_file
 fi
-sed -i 's|^install.hwlib=1|install.hwlib=0|g' $OPTIONALS
 }
 patch_manifest_eim() {
 if [ $EIM == true ]; then
@@ -632,7 +612,6 @@ remount_rw
 early_init_mount_dir
 
 # check
-chcon -R u:object_r:system_lib_file:s0 $MODPATH/system_support/lib*
 NAMES="libhidltransport.so libhwbinder.so"
 if [ "$SYSTEM_10" == true ]; then
   find_file
@@ -1059,7 +1038,8 @@ done
 
 # check
 if [ "$IS64BIT" == true ]; then
-  FILES=/lib64/libstagefrightdolby.so
+  FILES="/lib64/libstagefrightdolby.so
+         /lib64/libstagefright_soft_ddpdec.so"
   file_check_vendor
 fi
 if [ "$LIST32BIT" ]; then

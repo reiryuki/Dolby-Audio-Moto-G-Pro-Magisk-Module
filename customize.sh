@@ -982,21 +982,22 @@ $MODPATH/system/vendor/bin/hw/vendor.dolby*.hardware.dms*@*-service"
   change_name
   NAME=$'\x45\x27\x99\x21\x85\x39'
   FILE=$MODPATH/system/vendor/lib*/soundfx/libswdlb.so
-#  change_name
+  change_name
   NAME=$'\xd5\x3e\x26\xda\x02\x53'
   FILE=$MODPATH/system/vendor/lib*/soundfx/libhwdlb.so
-#  change_name
+  change_name
   NAME=$'\xef\x93\x7f\x67\x55\x87'
   FILE=$MODPATH/system/vendor/lib*/soundfx/lib*wdlb.so
   change_name
   NAME=39537a04bcaa
   NAME2=5f7279756b69
-  FILE="$MODPATH/.aml.sh $MODPATH/acdb*.conf"
+  FILE="$MODPATH/.aml.sh
+$MODPATH/acdb.conf"
   change_name
   NAME=452799218539
-#  change_name
+  change_name
   NAME=d53e26da0253
-#  change_name
+  change_name
 fi
 
 # audio rotation

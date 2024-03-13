@@ -8,20 +8,20 @@ allow init { system_file system_lib_file vendor_file vendor_configs_file vendor_
 allow init hal_dms_default_exec file relabelfrom
 
 # hwservice_manager
-allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app hal_audio_default mtk_hal_audio audioserver } { default_android_hwservice hal_dms_hwservice dms_hwservice } hwservice_manager find
+allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app hal_audio_default mtk_hal_audio audioserver } { default_android_hwservice hal_dms_hwservice dms_hwservice } hwservice_manager find
 
 # service_manager
 allow daxservice_app { permission_checker_service game_service netstats_service content_capture_service } service_manager find
 
 # binder
-allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } hal_dms_default binder call
+allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } hal_dms_default binder call
 
 # file
-allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { hal_dms_default_exec vendor_displayfeature_prop } file getattr
-allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } bluetooth_prop file map
-allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { vendor_default_prop vendor_audio_prop debug_mtk_gpud_prop audio_config_prop } file { read open getattr map }
-allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } qemu_hw_prop file { read open getattr }
-allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_displayfeature_prop file read
+allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } { hal_dms_default_exec vendor_displayfeature_prop } file getattr
+allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } bluetooth_prop file map
+allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } { vendor_default_prop vendor_audio_prop debug_mtk_gpud_prop audio_config_prop } file { read open getattr map }
+allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } qemu_hw_prop file { read open getattr }
+allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } vendor_displayfeature_prop file read
 allow { hal_audio_default mtk_hal_audio audioserver } vendor_dolby_loglevel_prop file { read open getattr }
 allow zygote { device unlabeled } file write
 allow zygote zygote_tmpfs file { create open }
@@ -29,19 +29,20 @@ allow init system_file file mounton
 allow daxservice_app default_prop file read
 
 # chr_file
-allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } device chr_file { read write open getattr ioctl }
+allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } device chr_file { read write open getattr ioctl }
 
 # dir
-allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } migt_file dir search
-allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_file dir write
+allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } migt_file dir search
+allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } system_file dir write
 
 # unix_stream_socket
-allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } zygote unix_stream_socket getopt
+allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } zygote unix_stream_socket getopt
 
 # capability
 allow system_app system_app capability { dac_read_search dac_override sys_resource }
 allow platform_app platform_app capability { dac_read_search dac_override sys_resource }
 allow priv_app priv_app capability { dac_read_search dac_override sys_resource }
+allow untrusted_app_30 untrusted_app_30 capability { dac_read_search dac_override sys_resource }
 allow untrusted_app_29 untrusted_app_29 capability { dac_read_search dac_override sys_resource }
 allow untrusted_app_27 untrusted_app_27 capability { dac_read_search dac_override sys_resource }
 allow untrusted_app untrusted_app capability { dac_read_search dac_override sys_resource }
@@ -64,7 +65,7 @@ allow { hal_audio_default mtk_hal_audio audioserver } logd unix_stream_socket co
 allow { hal_audio_default mtk_hal_audio audioserver } { diag_device vendor_diag_device } chr_file { read write open ioctl getattr }
 allow { hal_audio_default mtk_hal_audio audioserver } device chr_file { read write }
 allow { hal_audio_default mtk_hal_audio audioserver } system_suspend binder call
-allow { hal_audio_default mtk_hal_audio audioserver } { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } fifo_file write
+allow { hal_audio_default mtk_hal_audio audioserver } { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } fifo_file write
 allow hal_audio_default hal_audio_default capability2 block_suspend
 allow mtk_hal_audio mtk_hal_audio capability2 block_suspend
 allow audioserver audioserver capability2 block_suspend

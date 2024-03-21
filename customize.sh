@@ -105,11 +105,62 @@ fi
 # .aml.sh
 mv -f $MODPATH/aml.sh $MODPATH/.aml.sh
 
+# function
+check_function_2() {
+if [ -f $MODPATH/system_support$DIR/$LIB ]; then
+  ui_print "- Checking"
+  ui_print "$NAME"
+  ui_print "  function at"
+  ui_print "$FILE"
+  ui_print "  Please wait..."
+  if ! grep -q $NAME $FILE; then
+    ui_print "  Function not found."
+    ui_print "  Replaces /system$DIR/$LIB."
+    mv -f $MODPATH/system_support$DIR/$LIB $MODPATH/system$DIR
+    [ "$MES" ] && ui_print "$MES"
+  fi
+  ui_print " "
+fi
+}
+check_function() {
+if [ -d $MODPATH/system_support/vendor$DIR/hw ]; then
+  ui_print "- Checking"
+  ui_print "$NAME"
+  ui_print "  function at"
+  ui_print "$FILE"
+  ui_print "  Please wait..."
+  if grep -q $NAME $FILE; then
+    ui_print " "
+  else
+    ui_print "  Function not found."
+    ui_print "  Replaces /vendor$DIR/hw/*audio*.so."
+    mv -f $MODPATH/system_support/vendor$DIR/hw $MODPATH/system/vendor$DIR
+    [ "$MES" ] && ui_print "$MES"
+    ui_print " "
+    FILE=$SYSTEM$DIR/$LIB
+    check_function_2
+  fi
+fi
+}
+find_file() {
+for LIB in $LIBS; do
+  if [ -f $MODPATH/system_support$DIR/$LIB ]; then
+    FILE=`find $SYSTEM$DIR $SYSTEM_EXT$DIR -type f -name $LIB`
+    if [ ! "$FILE" ]; then
+      ui_print "- Using /system$DIR/$LIB."
+      mv -f $MODPATH/system_support$DIR/$LIB $MODPATH/system$DIR
+      ui_print " "
+    fi
+  fi
+done
+}
+
 # check
+NAME=_ZN7android23sp_report_stack_pointerEv
+LIB=libhidlbase.so
 if [ "`grep_prop dolby.10 $OPTIONALS`" == 1 ]; then
   SYSTEM_10=true
-else
-  NAME=_ZN7android23sp_report_stack_pointerEv
+elif [ "$API" -le 29 ]; then
   if [ "$IS64BIT" == true ]; then
     FILE=$VENDOR/lib64/hw/*audio*.so
     ui_print "- Checking"
@@ -149,8 +200,45 @@ else
   else
     SYSTEM_10=true
   fi
+else
+  SYSTEM_10=false
+  if [ "$IS64BIT" == true ]; then
+    DIR=/lib64
+    FILE=$VENDOR$DIR/hw/*audio*.so
+    check_function
+  fi
+  if [ "$LIST32BIT" ]; then
+    DIR=/lib
+    FILE=$VENDOR$DIR/hw/*audio*.so
+    check_function
+  fi
 fi
+NAME=_ZN7android8hardware23getOrCreateCachedBinderEPNS_4hidl4base4V1_05IBaseE
+DES=vendor.dolby.hardware.dms@1.0.so
+if [ "$IS64BIT" == true ]; then
+  DIR=/lib64
+  LISTS=`strings $MODPATH/system/vendor$DIR/$DES | grep ^lib | grep .so`
+  FILE=`for LIST in $LISTS; do echo $SYSTEM$DIR/$LIST; done`
+  check_function_2
+fi
+if [ "$LIST32BIT" ]; then
+  DIR=/lib
+  LISTS=`strings $MODPATH/system/vendor$DIR/$DES | grep ^lib | grep .so`
+  FILE=`for LIST in $LISTS; do echo $SYSTEM$DIR/$LIST; done`
+  check_function_2
+fi
+
+# check
 if [ "$SYSTEM_10" == true ]; then
+  LIBS="libhidltransport.so libhwbinder.so"
+  if [ "$IS64BIT" == true ]; then
+    DIR=/lib64
+    find_file
+  fi
+  if [ "$LIST32BIT" ]; then
+    DIR=/lib
+    find_file
+  fi
   ui_print "- Using legacy libraries"
   rm -f $MODPATH/system/vendor/lib64/libstagefright*.so
   cp -rf $MODPATH/system_10/* $MODPATH/system
@@ -166,69 +254,6 @@ else
     ui_print " "
   fi
 fi
-rm -rf $MODPATH/system_10 $MODPATH/system_legacy
-
-# function
-check_function() {
-if [ -f $MODPATH/system_support$DIR/$LIB ]; then
-  ui_print "- Checking"
-  ui_print "$NAME"
-  ui_print "  function at"
-  ui_print "$FILE"
-  ui_print "  Please wait..."
-  if ! grep -q $NAME $FILE; then
-    ui_print "  Function not found."
-    ui_print "  Replaces /system$DIR/$LIB."
-    mv -f $MODPATH/system_support$DIR/$LIB $MODPATH/system$DIR
-    [ "$MES" ] && ui_print "$MES"
-  fi
-  ui_print " "
-fi
-}
-find_file() {
-for LIB in $LIBS; do
-  if [ -f $MODPATH/system_support$DIR/$LIB ]; then
-    FILE=`find $SYSTEM$DIR $SYSTEM_EXT$DIR -type f -name $LIB`
-    if [ ! "$FILE" ]; then
-      ui_print "- Using /system$DIR/$LIB."
-      mv -f $MODPATH/system_support$DIR/$LIB $MODPATH/system$DIR
-      ui_print " "
-    fi
-  fi
-done
-}
-
-# check
-NAME=_ZN7android8hardware23getOrCreateCachedBinderEPNS_4hidl4base4V1_05IBaseE
-DES=vendor.dolby.hardware.dms@1.0.so
-LIB=libhidlbase.so
-MES="  Dolby Audio may not work."
-if [ "$IS64BIT" == true ]; then
-  DIR=/lib64
-  LISTS=`strings $MODPATH/system/vendor$DIR/$DES | grep ^lib | grep .so`
-  FILE=`for LIST in $LISTS; do echo $SYSTEM$DIR/$LIST; done`
-  check_function
-fi
-if [ "$LIST32BIT" ]; then
-  DIR=/lib
-  LISTS=`strings $MODPATH/system/vendor$DIR/$DES | grep ^lib | grep .so`
-  FILE=`for LIST in $LISTS; do echo $SYSTEM$DIR/$LIST; done`
-  check_function
-fi
-
-# check
-if [ "$SYSTEM_10" == true ]; then
-  LIBS="libhidltransport.so libhwbinder.so"
-  if [ "$IS64BIT" == true ]; then
-    DIR=/lib64
-    find_file
-  fi
-  if [ "$LIST32BIT" ]; then
-    DIR=/lib
-    find_file
-  fi
-fi
-rm -rf $MODPATH/system_support
 
 # sepolicy
 FILE=$MODPATH/sepolicy.rule
@@ -270,9 +295,9 @@ fi
 
 # cleaning
 ui_print "- Cleaning..."
-PKG=`cat $MODPATH/package.txt`
+PKGS=`cat $MODPATH/package.txt`
 if [ "$BOOTMODE" == true ]; then
-  for PKGS in $PKG; do
+  for PKG in $PKGS; do
     FILE=`find /data/app -name *$PKG*`
     if [ "$FILE" ]; then
       RES=`pm uninstall $PKG 2>/dev/null`
@@ -287,7 +312,8 @@ else
   rm -f /data/vendor/dolby/dap_sqlite3.db
   sed -i 's|dax_sqlite3.db|dap_sqlite3.db|g' $MODPATH/uninstall.sh
 fi
-rm -rf $MODPATH/unused
+rm -rf $MODPATH/system_10 $MODPATH/system_legacy\
+ $MODPATH/system_support $MODPATH/unused
 remove_sepolicy_rule
 ui_print " "
 
@@ -307,12 +333,12 @@ for NAME in $NAMES; do
     sh $FILE
     rm -f $FILE
   fi
-  rm -rf /metadata/magisk/$NAME
-  rm -rf /mnt/vendor/persist/magisk/$NAME
-  rm -rf /persist/magisk/$NAME
-  rm -rf /data/unencrypted/magisk/$NAME
-  rm -rf /cache/magisk/$NAME
-  rm -rf /cust/magisk/$NAME
+  rm -rf /metadata/magisk/$NAME\
+   /mnt/vendor/persist/magisk/$NAME\
+   /persist/magisk/$NAME\
+   /data/unencrypted/magisk/$NAME\
+   /cache/magisk/$NAME\
+   /cust/magisk/$NAME
 done
 }
 
@@ -682,6 +708,9 @@ if echo "$PROP" | grep -q m; then
   ui_print "- Activating music stream..."
   sed -i 's|#m||g' $FILE
   sed -i 's|musicstream=|musicstream=true|g' $MODPATH/acdb.conf
+  sed -i 's|music_stream false|music_stream true|g' $MODPATH/service.sh
+  ui_print "  Sound FX will always be enabled"
+  ui_print "  and cannot be disabled by on/off togglers"
   ui_print " "
 else
   APPS=AudioFX

@@ -904,6 +904,8 @@ done
 }
 
 # check
+FILES=/etc/media_codecs_dolby_audio.xml
+file_check_vendor
 if [ "$IS64BIT" == true ]; then
   FILES="/lib64/libstagefrightdolby.so
          /lib64/libstagefright_soft_ddpdec.so"

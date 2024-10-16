@@ -4,12 +4,16 @@ ui_print " "
 # var
 UID=`id -u`
 [ ! "$UID" ] && UID=0
-LIST32BIT=`grep_get_prop ro.product.cpu.abilist32`
-if [ ! "$LIST32BIT" ]; then
-  LIST32BIT=`grep_get_prop ro.system.product.cpu.abilist32`
+ABILIST=`grep_get_prop ro.product.cpu.abilist`
+if [ ! "$ABILIST" ]; then
+  ABILIST=`grep_get_prop ro.system.product.cpu.abilist`
 fi
-if [ ! "$LIST32BIT" ]; then
-  [ -f /system/lib/libandroid.so ] && LIST32BIT=true
+ABILIST32=`grep_get_prop ro.product.cpu.abilist32`
+if [ ! "$ABILIST32" ]; then
+  ABILIST32=`grep_get_prop ro.system.product.cpu.abilist32`
+fi
+if [ ! "$ABILIST32" ]; then
+  [ -f /system/lib/libandroid.so ] && ABILIST32=true
 fi
 
 # log
@@ -60,21 +64,30 @@ else
 fi
 ui_print " "
 
-# bit
-if [ "$IS64BIT" == true ]; then
-  ui_print "- 64 bit architecture"
+# architecture
+if [ "$ABILIST" ]; then
+  ui_print "- $ABILIST architecture"
   ui_print " "
-  # 32 bit
-  if [ "$LIST32BIT" ]; then
-    ui_print "- 32 bit library support"
+fi
+NAME=arm64-v8a
+NAME2=armeabi-v7a
+if ! echo "$ABILIST" | grep -q $NAME; then
+  if [ "$BOOTMODE" == true ]; then
+    ui_print "! This ROM doesn't support $NAME architecture"
   else
-    ui_print "- Doesn't support 32 bit library"
-    rm -rf $MODPATH/armeabi-v7a $MODPATH/x86\
-     $MODPATH/system*/lib $MODPATH/system*/vendor/lib
+    ui_print "! This Recovery doesn't support $NAME architecture"
+    ui_print "  Try to install via Magisk app instead"
   fi
-  ui_print " "
-else
-  abort "! This module is only for 64 bit architecture."
+  abort
+fi
+if ! echo "$ABILIST" | grep -q $NAME2; then
+  rm -rf $MODPATH/system*/lib\
+   $MODPATH/system*/vendor/lib
+  if [ "$BOOTMODE" != true ]; then
+    ui_print "! This Recovery doesn't support $NAME2 architecture"
+    ui_print "  Try to install via Magisk app instead"
+    ui_print " "
+  fi
 fi
 
 # sdk
@@ -186,7 +199,7 @@ elif [ "$API" -le 29 ]; then
   else
     FUNC64=false
   fi
-  if [ "$LIST32BIT" ]; then
+  if [ "$ABILIST32" ]; then
     FILE=$VENDOR/lib/hw/*audio*.so
     ui_print "- Checking"
     ui_print "$NAME"
@@ -215,7 +228,7 @@ else
     FILE=$VENDOR$DIR/hw/*audio*.so
     check_function
   fi
-  if [ "$LIST32BIT" ]; then
+  if [ "$ABILIST32" ]; then
     DIR=/lib
     FILE=$VENDOR$DIR/hw/*audio*.so
     check_function
@@ -230,7 +243,7 @@ if [ "$IS64BIT" == true ]; then
   FILE=`for LIST in $LISTS; do echo $SYSTEM$DIR/$LIST; done`
   check_function_2
 fi
-if [ "$LIST32BIT" ]; then
+if [ "$ABILIST32" ]; then
   DIR=/lib
   LISTS=`strings $MODPATH/system/vendor$DIR/$DES | grep ^lib | grep .so`
   FILE=`for LIST in $LISTS; do echo $SYSTEM$DIR/$LIST; done`
@@ -244,7 +257,7 @@ if [ "$SYSTEM_10" == true ]; then
     DIR=/lib64
     find_file
   fi
-  if [ "$LIST32BIT" ]; then
+  if [ "$ABILIST32" ]; then
     DIR=/lib
     find_file
   fi
@@ -915,7 +928,7 @@ if [ "$IS64BIT" == true ]; then
          /lib64/libstagefright_soft_ddpdec.so"
   file_check_vendor
 fi
-if [ "$LIST32BIT" ]; then
+if [ "$ABILIST32" ]; then
   FILES="/lib/libstagefrightdolby.so
          /lib/libstagefright_soft_ddpdec.so"
   file_check_vendor
@@ -950,7 +963,7 @@ if [ "$IS64BIT" == true ]; then
   MODFILE=$MODPATH/system/vendor/lib64/$NAME2
   rename_file
 fi
-if [ "$LIST32BIT" ]; then
+if [ "$ABILIST32" ]; then
   FILE=$MODPATH/system/lib/$NAME
   MODFILE=$MODPATH/system/vendor/lib/$NAME2
   rename_file
@@ -968,7 +981,7 @@ if [ "$IS64BIT" == true ]; then
   MODFILE=$MODPATH/system/vendor/lib64/$NAME2
   rename_file
 fi
-if [ "$LIST32BIT" ]; then
+if [ "$ABILIST32" ]; then
   FILE=$MODPATH/system/vendor/lib/$NAME
   MODFILE=$MODPATH/system/vendor/lib/$NAME2
   rename_file
@@ -1000,7 +1013,7 @@ if [ "`grep_prop dolby.mod $OPTIONALS`" != 0 ]; then
     MODFILE=$MODPATH/system/vendor/lib64/soundfx/$NAME2
     rename_file
   fi
-  if [ "$LIST32BIT" ]; then
+  if [ "$ABILIST32" ]; then
     FILE=$MODPATH/system/vendor/lib/soundfx/$NAME
     MODFILE=$MODPATH/system/vendor/lib/soundfx/$NAME2
     rename_file
@@ -1066,7 +1079,7 @@ fi
 # raw
 FILE=$MODPATH/.aml.sh
 if [ "`grep_prop disable.raw $OPTIONALS`" == 0 ]; then
-  ui_print "- Does not disable Ultra Low Latency playback (RAW)"
+  ui_print "- Does not disable Ultra Low Latency (Raw) playback"
   ui_print " "
 else
   sed -i 's|#u||g' $FILE

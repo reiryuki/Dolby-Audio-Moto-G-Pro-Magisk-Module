@@ -1,7 +1,7 @@
 id=DolbyAudio
 name=Dolby Audio Moto G Pro
-version=v9.1
-versionCode=91
+version=v9.2
+versionCode=92
 author=Rei Ryuki the Fixer
 description=Equalizer global type sound effect ported from Motorola G Pro (sofiap_sprout) for any arm64-v8a architecture, Android 9 (SDK 28) and up.
 

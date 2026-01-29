@@ -27,6 +27,7 @@
 ## Requirements
 - arm64-v8a architecture
 - Android 9 (SDK 28) and up
+- HIDL audio service
 - Magisk or Kitsune Mask or KernelSU or Apatch installed (Recommended to use Magisk Delta/Kitsune Mask for systemless early init mount manifest.xml if your ROM is Read-Only https://t.me/ryukinotes/49)
 - Moto Core Magisk Module installed https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
 

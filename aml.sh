@@ -4,7 +4,6 @@
 [ ! "$libdir" ] && libdir=/vendor
 MODAECS=`find $MODPATH -type f -name *audio*effects*.conf`
 MODAEXS=`find $MODPATH -type f -name *audio*effects*.xml`
-MODAPS=`find $MODPATH -type f -name *policy*.conf -o -name *policy*.xml`
 
 # function
 archdir() {
@@ -374,12 +373,6 @@ fi
 # patch audio effects
 dap
 #11dvl
-
-# patch audio policy
-#ufor MODAP in $MODAPS; do
-#u  sed -i 's|RAW|NONE|g' $MODAP
-#u  sed -i 's|,raw||g' $MODAP
-#udone
 
 
 

@@ -4,9 +4,8 @@
 - Motorola & Dolby apps and blobs are owned by Motorola™ & Dolby™.
 - The MIT license specified here is for the Magisk Module only, not for Motorola & Dolby apps and blobs.
 
-## Descriptions
-- Equalizer sound effect ported from Motorola Moto G Pro (sofiap_sprout) and integrated as a Magisk Module for all supported and rooted devices with Magisk
-- Global type sound effect
+## Description
+- Equalizer global type sound effect ported from Motorola Moto G Pro (sofiap_sprout) and integrated as a Magisk Module for all supported and rooted devices with Magisk
 - Changes/spoofs ro.product.brand to motorola which may break some system apps and features functionality
 - Conflicted with `vendor.dolby.hardware.dms@2.0-service`
 
@@ -18,13 +17,27 @@
 - libhidlbase.so, libhidltransport.so, & libhwbinder.so: CrDroid ROM Android 13
 - libutils.so: LineageOS 23 Android 16 BP2A.250605.031.A2 1758630651
 - android.hardware.audio.effect@*-impl.so: https://dumps.tadiphone.dev/dumps/oneplus/op594dl1 qssi-user-14-UKQ1.230924.001-1701915639192-release-keys--US
-- libmagiskpolicy.so: Magisk (stable) 30.7 (30700)
+- libmagiskpolicy.so: Magisk (debug) 31.0 (31000)
 
-## Changelog
+## Screenshots
+https://t.me/androidryukimodsdiscussions/2722
 
-v1.0.4
+## Requirements
+- arm64-v8a architecture
+- Android 9 (SDK 28) and up
+- HIDL audio service
+- Magisk or Kitsune Mask or KernelSU or Apatch installed (Recommended to use Magisk Delta/Kitsune Mask for systemless early init mount manifest.xml if your ROM is Read-Only https://t.me/ryukinotes/49)
+- Moto Core Magisk Module installed https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
+
+## Download Links and Changelog
+
+v1.0.5 https://github.com/reiryuki/Dolby-Audio-Moto-G-Pro-Magisk-Module
+- Update libmagiskpolicy.so from Magisk (debug) 31.0 (31000)
+- Add a new optional dolby.mod_xml to let users to use any modified/custom dax-default.xml. Please read Optionals below.
+
+v1.0.4 https://move2link.co/c381ef4
 - Forgot to declare APEX variable
-- Prepare directories in /storage/emulated/"$UID"/Android/data/com.motorola.dolby.dolbyui/
+- Prepare /storage/emulated/"$UID"/Android/data/$PKG/ directories
 
 v1.0.3
 - Fix manifest.xml detection bug in some ROMs
@@ -46,7 +59,7 @@ v1.0.0
 - Removes conflicted weird modules
 
 v9.9
-- Update libmagiskpolicy.so from Magisk (stable) 30.7 (30700) (fixes selinux denials in KernelSU)
+- Update libmagiskpolicy.so from Magisk (stable) 30.7 (30700) (fixes sepolicy denials in KernelSU)
 - Does not disable raw playback (You can use Audio Compatibility Patch Reborn Magisk Module instead)
 
 v9.8
@@ -61,41 +74,26 @@ v9.6
 - Exclude \*audio\*effects\*haptic\*.xml
 - Fix wrong file permissions in some ROMs
 
-v9.5
-- Fix ZN7android8String16aSEOS0 function not found in some ROMs
-- Add libutils.so as system_support
-- Abort installation if fail to mount mirror system
-
-## Screenshots
-https://t.me/androidryukimodsdiscussions/2722
-
-## Requirements
-- arm64-v8a architecture
-- Android 9 (SDK 28) and up
-- HIDL audio service
-- Magisk or Kitsune Mask or KernelSU or Apatch installed (Recommended to use Magisk Delta/Kitsune Mask for systemless early init mount manifest.xml if your ROM is Read-Only https://t.me/ryukinotes/49)
-- Moto Core Magisk Module installed https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
+## Download Tutorial
+https://t.me/ryukinotes/97
 
 ## WARNING!!!
 Possibility of bootloop or even softbrick or a service failure on Read-Only ROM if you don't use Magisk Delta/Kitsune Mask.
 
-## Installation Guide & Download Link
+## Installation Guide
 - Recommended to use Magisk Delta/Kitsune Mask https://t.me/ryukinotes/49
 - Remove any other else Dolby MAGISK MODULE with different name (no need to remove if it's the same name)
 - Reboot
 - If you are using KernelSU, you need to disable Unmount Modules by Default in KernelSU app settings and install https://github.com/KernelSU-Modules-Repo/meta-overlayfs or https://github.com/KernelSU-Modules-Repo/magic_mount_rs or https://github.com/KernelSU-Modules-Repo/hybrid_mount or https://github.com/maxsteeel/nomount first depending on ROM compatibility
 - Install Moto Core Magisk Module first: https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
-- If you have Dolby in-built in your ROM, then you need to activate data.cleanup=1 at the first time install (READ Optionals bellow!)
-- Install this module https://move2link.co/c381ef4 via Magisk app or Kitsune Mask app or KernelSU app or Apatch app or Recovery if Magisk or Kitsune Mask installed
+- If you have Dolby in-built in your ROM, then you need to activate data.cleanup=1 at the first time install (READ Optionals below!)
+- Install this module via Magisk app or Kitsune Mask app or KernelSU app or Apatch app or Recovery if Magisk or Kitsune Mask installed
 - Install AML Magisk Module https://t.me/ryukinotes/34 only if using any other else audio mod module
 - Reboot
 - If you are using KernelSU, you need to allow superuser list manually all package name listed in package.txt (and your home launcher app also) (enable show system apps) and reboot afterwards
 - If you are using SUList, you need to allow list manually your home launcher app (enable show system apps) and reboot afterwards
 - If options doesn't show up in Bluetooth audio, try disconnect and reconnect the Bluetooth and restart the app
 - If you have vibrator, camera, charging/USB, SIM card/RIL, display, brightness, WiFi, thermal, and sensors issues (fingerprint, proximity, gyroscope, etc.), then install https://github.com/reiryuki/Hardware-Services-Restarter-Magisk-Module also
-
-## Download Tutorial
-https://t.me/ryukinotes/97
 
 ## Optionals
 - https://t.me/ryukinotes/8
@@ -107,18 +105,18 @@ https://t.me/ryukinotes/97
 - https://t.me/ryukinotes/11
 - Global: https://t.me/ryukinotes/34
 
-## Support & Bug Report
+## Support and Bug Report
 - https://t.me/ryukinotes/54
 - If you don't do above, issues will be closed immediately
 
 ## Credits and Contributors
 - @HuskyDG
+- @HELLBOY017
 - https://t.me/viperatmos
 - https://t.me/androidryukimodsdiscussions
-- @HELLBOY017
 - https://t.me/androidappsportdevelopment
 
-## Sponsors
+## Sponsors and Donation
 https://t.me/ryukinotes/25
 
 

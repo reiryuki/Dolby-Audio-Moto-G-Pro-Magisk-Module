@@ -31,7 +31,7 @@ https://t.me/androidryukimodsdiscussions/2722
 
 ## Download Links and Changelog
 
-v1.0.5 https://github.com/reiryuki/Dolby-Audio-Moto-G-Pro-Magisk-Module
+v1.0.5 https://move2link.co/a59b128
 - Update libmagiskpolicy.so from Magisk (debug) 31.0 (31000)
 - Add a new optional dolby.mod_xml to let users to use any modified/custom dax-default.xml. Please read Optionals below.
 
